@@ -10,17 +10,26 @@ plugins {
 }
 
 android {
-    namespace = "com.shverma.androidstarter"
+    namespace = "com.shverma.aichat"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.shverma.androidstarter"
+        applicationId = "com.shverma.aichat"
         minSdk = 24
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        val openAiKey: String =
+            project.findProperty("OPENAI_API_KEY") as String? ?: ""
+
+        buildConfigField(
+            "String",
+            "OPENAI_API_KEY",
+            "\"$openAiKey\""
+        )
     }
 
     buildTypes {
@@ -41,6 +50,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 

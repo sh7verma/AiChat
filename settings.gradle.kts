@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "AndroidStarter"
+rootProject.name = "AiChat"
 include(":app")
  
