@@ -109,6 +109,23 @@ fun ChatScreen(
                 .padding(padding)
         ) {
 
+            // Display error message if present
+            state.error?.let { errorMessage ->
+                Surface(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp),
+                    color = MaterialTheme.colorScheme.errorContainer,
+                    shape = MaterialTheme.shapes.small
+                ) {
+                    Text(
+                        text = errorMessage,
+                        color = MaterialTheme.colorScheme.onErrorContainer,
+                        modifier = Modifier.padding(16.dp)
+                    )
+                }
+            }
+
             LazyColumn(
                 modifier = Modifier.weight(1f),
                 state = listState,

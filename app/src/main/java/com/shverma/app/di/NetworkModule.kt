@@ -19,10 +19,12 @@ object NetworkModule {
 
     private const val OPENAI_BASE_URL = "https://api.openai.com/"
 
+    private const val OPENAI_API_KEY = "" // add you key here for testing, in production add this to local.properties and read from there
+
     @Provides
     @Singleton
     fun provideApiKeyProvider(): () -> String = {
-        "OPENAI_API_KEY" // add you key here
+        OPENAI_API_KEY
     }
 
 

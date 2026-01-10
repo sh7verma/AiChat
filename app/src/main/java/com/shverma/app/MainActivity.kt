@@ -18,9 +18,7 @@ import androidx.core.view.WindowCompat
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.toRoute
-import com.shverma.app.ui.details.DetailScreen
-import com.shverma.app.ui.home.HomeScreen
+import com.shverma.app.ui.chat.ChatScreen
 import com.shverma.app.ui.theme.AppTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.serialization.Serializable
@@ -63,25 +61,11 @@ fun AppNavigation(
     ) { padding ->
         NavHost(
             navController = navController,
-            startDestination = Routes.HomeRoute,
+            startDestination = Routes.ChatRoute,
             modifier = Modifier.padding(bottom = padding.calculateBottomPadding())
         ) {
-            composable<Routes.HomeRoute> {
-                HomeScreen(
-                    snackBarHostState = snackBarHostState,
-                    onItemClick = { itemId ->
-                        navController.navigate(Routes.DetailRoute(itemId))
-                    }
-                )
-            }
-
-            composable<Routes.DetailRoute> { navBackStackEntry ->
-                val args = navBackStackEntry.toRoute<Routes.DetailRoute>()
-                DetailScreen(
-                    itemId = args.id,
-                    snackBarHostState = snackBarHostState,
-                    onBackClick = { navController.popBackStack() }
-                )
+            composable<Routes.ChatRoute> {
+                ChatScreen()
             }
         }
     }
@@ -89,10 +73,6 @@ fun AppNavigation(
 
 
 object Routes {
-
     @Serializable
-    object HomeRoute
-
-    @Serializable
-    data class DetailRoute(val id: Int)
+    object ChatRoute
 }

@@ -1,7 +1,6 @@
 package com.shverma.app.di
 
 import android.content.Context
-import com.shverma.app.data.preference.DataStoreHelper
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -18,12 +17,3 @@ object DispatchersModule {
     fun provideIODispatcher() = Dispatchers.IO
 }
 
-
-@Module
-@InstallIn(SingletonComponent::class)
-object DataModule {
-
-    @Provides
-    @Singleton
-    fun provideDataStoreHelper(@ApplicationContext context: Context) = DataStoreHelper(context)
-}

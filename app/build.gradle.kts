@@ -5,7 +5,6 @@ plugins {
     alias(libs.plugins.googleDevtoolsKsp)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.jetbrainsKotlinKapt)
-    alias(libs.plugins.room)
     alias(libs.plugins.compose.compiler)
 }
 
@@ -55,9 +54,6 @@ android {
 }
 
 
-room {
-    schemaDirectory("$projectDir/schemas")
-}
 
 
 dependencies {
@@ -95,42 +91,17 @@ dependencies {
     kapt(libs.androidx.hilt.compiler)
     kapt(libs.google.dagger.hilt.android.compiler)
 
-    /*Data Store*/
-    implementation(libs.androidx.datastore.preferences)
-    implementation(libs.androidx.datastore)
 
-    /*Coil Image*/
-    implementation(libs.io.coil.kt.compose)
-    implementation(libs.coil.svg)
-
-    /*JWT Token*/
-    implementation(libs.org.bitbucket.b.c.jose4j)
-
-    /*Exo-Player*/
-    implementation(libs.androidx.media3.exoplayer)
-    implementation(libs.media3.ui)
-    implementation(libs.media3.common)
-
-    /*Work Manager*/
-    implementation(libs.work.runtime.ktx)
-    implementation(libs.androidx.hilt.work)
 
     /*Timber*/
     implementation(libs.jakewharton.timber)
 
-    /*Room database*/
-    annotationProcessor(libs.androidx.room.compiler)
-    implementation(libs.androidx.room.ktx)
-    implementation(libs.androidx.room.runtime)
-    ksp(libs.androidx.room.compiler)
 
     /*Testing*/
     androidTestImplementation(libs.androidx.compose.ui.test.junit)
-    androidTestImplementation(libs.androidx.room.testing)
     androidTestImplementation(libs.androidx.test.espresso.core)
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.androidx.test.rules)
-    androidTestImplementation(libs.androidx.work.testing)
     androidTestImplementation(libs.squareup.okhttp3.mockwebserver)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     debugImplementation(libs.androidx.compose.ui.test.manifest)

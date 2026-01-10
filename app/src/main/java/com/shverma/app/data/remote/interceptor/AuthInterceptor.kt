@@ -1,8 +1,8 @@
 package com.shverma.app.data.remote.interceptor
 
-import com.shverma.aichat.BuildConfig
 import okhttp3.Interceptor
 import okhttp3.Response
+import java.io.IOException
 import javax.inject.Inject
 
 /**
@@ -13,12 +13,13 @@ class AuthInterceptor(
 ) : Interceptor {
 
     override fun intercept(chain: Interceptor.Chain): Response {
-//        require(BuildConfig.OPENAI_API_KEY.isNotBlank()) {
-//            "OpenAI API key missing. Check local.properties and build.gradle."
-//        }
+        val apiKey = apiKeyProvider()
+        if (apiKey.isBlank()) {
+            throw IOException("OpenAI API key is missing. Please add your API key to the app.")
+        }
         val request = chain.request()
             .newBuilder()
-            .addHeader("Authorization", "Bearer ${apiKeyProvider()}")
+            .addHeader("Authorization", "Bearer $apiKey")
             .build()
 
         return chain.proceed(request)
