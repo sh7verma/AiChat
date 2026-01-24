@@ -1,5 +1,6 @@
 package com.shverma.app.ui.chat
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -9,20 +10,27 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.Button
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Send
+import androidx.compose.material.icons.filled.Stop
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -173,7 +181,6 @@ fun ChatScreen(
     }
 }
 
-
 @Composable
 private fun ChatInputBar(
     text: TextFieldValue,
@@ -185,7 +192,12 @@ private fun ChatInputBar(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp),
+            .padding(12.dp)
+            .background(
+                color = MaterialTheme.colorScheme.surfaceVariant,
+                shape = RoundedCornerShape(28.dp)
+            )
+            .padding(horizontal = 12.dp, vertical = 6.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
 
@@ -193,27 +205,43 @@ private fun ChatInputBar(
             value = text,
             onValueChange = onTextChange,
             modifier = Modifier.weight(1f),
-            placeholder = { Text("Type a message") },
+            placeholder = { Text("Message AI…") },
             maxLines = 4,
-            enabled = !isStreaming
+            enabled = !isStreaming,
+            shape = RoundedCornerShape(20.dp),
+            colors = androidx.compose.material3.OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = MaterialTheme.colorScheme.surfaceVariant,
+                unfocusedBorderColor = MaterialTheme.colorScheme.surfaceVariant
+            )
         )
 
-        Spacer(modifier = Modifier.width(8.dp))
+        Spacer(Modifier.width(8.dp))
 
-        if (isStreaming) {
-            TextButton(onClick = onCancel) {
-                Text("Stop")
-            }
-        } else {
-            Button(
-                onClick = onSend,
-                enabled = text.text.isNotBlank()
-            ) {
-                Text("Send")
-            }
+        // Floating action button style
+        IconButton(
+            onClick = {
+                if (isStreaming) onCancel() else onSend()
+            },
+            enabled = if (isStreaming) true else text.text.isNotBlank(),
+            modifier = Modifier
+                .size(44.dp)
+                .background(
+                    color = if (isStreaming)
+                        MaterialTheme.colorScheme.error
+                    else
+                        MaterialTheme.colorScheme.primary,
+                    shape = CircleShape
+                )
+        ) {
+            Icon(
+                imageVector = if (isStreaming) Icons.Default.Stop else Icons.Default.Send,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onPrimary
+            )
         }
     }
 }
+
 
 @Composable
 fun MessageItem(
@@ -226,68 +254,33 @@ fun MessageItem(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = if (isUser) Arrangement.End else Arrangement.Start
     ) {
-        Surface(
-            modifier = Modifier.widthIn(max = 280.dp),
-            shape = MaterialTheme.shapes.medium,
-            color = if (isUser)
-                MaterialTheme.colorScheme.primary
-            else
-                MaterialTheme.colorScheme.surfaceVariant,
-            tonalElevation = if (isStreaming) 1.dp else 2.dp
+        Card(
+            modifier = Modifier.widthIn(max = 300.dp),
+            shape = RoundedCornerShape(
+                topStart = 18.dp,
+                topEnd = 18.dp,
+                bottomEnd = if (isUser) 4.dp else 18.dp,
+                bottomStart = if (isUser) 18.dp else 4.dp
+            ),
+            colors = CardDefaults.cardColors(
+                containerColor = if (isUser)
+                    MaterialTheme.colorScheme.primary
+                else
+                    MaterialTheme.colorScheme.surfaceVariant
+            ),
+            elevation = CardDefaults.cardElevation(
+                defaultElevation = if (isStreaming) 1.dp else 3.dp
+            )
         ) {
             Text(
                 text = message.content,
-                modifier = Modifier.padding(12.dp),
+                modifier = Modifier.padding(14.dp),
+                style = MaterialTheme.typography.bodyMedium,
                 color = if (isUser)
                     MaterialTheme.colorScheme.onPrimary
                 else
                     MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
-    }
-}
-
-
-@Composable
-fun TypewriterText(
-    messageId: String,
-    fullText: String,
-    modifier: Modifier = Modifier,
-    speedMs: Long = 18L
-) {
-    var displayedText by remember(messageId) { mutableStateOf("") }
-    var lastRenderedLength by remember(messageId) { mutableStateOf(0) }
-
-    LaunchedEffect(fullText) {
-        if (fullText.length > lastRenderedLength) {
-            val newPart = fullText.substring(lastRenderedLength)
-            for (char in newPart) {
-                displayedText += char
-                kotlinx.coroutines.delay(speedMs)
-            }
-            lastRenderedLength = fullText.length
-        }
-    }
-
-    Row(modifier = modifier) {
-        Text(displayedText)
-        TypingCursor()
-    }
-}
-
-
-@Composable
-fun TypingCursor() {
-    var visible by remember { mutableStateOf(true) }
-
-    LaunchedEffect(Unit) {
-        while (true) {
-            visible = !visible
-            kotlinx.coroutines.delay(500)
-        }
-    }
-
-    if (visible) {
-        Text("▍")
     }
 }
