@@ -6,10 +6,8 @@ import com.shverma.app.core.domain.model.ChatMessage
 import com.shverma.app.core.domain.model.ChatRequest
 import com.shverma.app.core.domain.model.Role
 import com.shverma.app.data.repository.ChatRepository
-import com.shverma.app.utils.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -34,7 +32,6 @@ class ChatViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(ChatUiState())
     val uiState: StateFlow<ChatUiState> = _uiState
 
-    val uiEvent = Channel<UiEvent>()
     private var streamingJob: Job? = null
 
     fun sendMessage(

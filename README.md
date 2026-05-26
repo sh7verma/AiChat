@@ -8,6 +8,12 @@ with a strong focus on **user experience, scalability, and clean architecture**.
 
 > This project is built as a **portfolio-grade reference implementation** for AI-powered mobile applications.
 
+<p align="center">
+  <img src="screenshots/demo.gif" alt="AiChat streaming demo" width="320"/>
+</p>
+
+📖 **Technical writeup:** [Why Streaming AI Responses Feels Faster Than It Is (Android + SSE)](https://dev.to/shubham_verma_8f24ba13c9b/why-streaming-ai-responses-feels-faster-than-it-is-android-sse-2o6f)
+
 ---
 
 ## ✨ Key Highlights
@@ -16,7 +22,7 @@ with a strong focus on **user experience, scalability, and clean architecture**.
 - ⌨️ Typewriter-style streaming text effect
 - 🧩 Clean MVVM + Clean Architecture
 - 🔄 Flow-based streaming pipeline
-- 🧪 Robust error handling
+- 🧪 Error handling
 - 🎨 Modern Jetpack Compose UI (Material 3)
 
 ---
@@ -31,6 +37,19 @@ with a strong focus on **user experience, scalability, and clean architecture**.
 - **Networking**: Retrofit + OkHttp
 - **Streaming Protocol**: Server-Sent Events (SSE)
 - **AI API**: OpenAI Chat Completion API
+
+---
+
+## 🚀 Getting Started
+
+1. Clone the repository and open it in Android Studio.
+2. Add your OpenAI API key to `local.properties`:
+   ```
+   OPENAI_API_KEY=sk-...
+   ```
+3. Build and run on a device or emulator (minSdk 24).
+
+> `local.properties` is git-ignored. The key is read by `build.gradle.kts` into `BuildConfig.OPENAI_API_KEY` and injected at runtime via `NetworkModule`.
 
 ---
 
@@ -82,12 +101,16 @@ This structure ensures:
 
 ---
 
+### Core / Streaming
+- **SseParser.kt** – Parses raw SSE lines into `ChatChunk` objects (`core/streaming/`)
+
+---
+
 ### Data Layer
 - **ChatRepository.kt** – Coordinates data operations
 - **ChatClientImpl.kt** – OpenAI-specific implementation
 - **OpenAIApiService.kt** – Retrofit interface
 - **OpenAIModels.kt** – DTOs for OpenAI API
-- **SseParser.kt** – Parses Server-Sent Events
 
 ---
 
